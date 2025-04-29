@@ -1,0 +1,70 @@
+package 닌텐도게임;
+
+public class GameChip {
+	// 닌텐도에 들어갈 수 있는 게임칩의 공통의 부모 클래스
+	// 공통된 하나의 규격 제시
+	
+	public void gameStart() {
+		//3개의 클래스(pokemon, zelda, mario)에 작성한 동일한 메서드
+		System.out.println("게임을 시작한다~");
+	}
+}
+---------------------------------------------------------------
+package 닌텐도게임;
+
+public class Zelda extends GameChip{
+
+	@Override
+	public void gameStart() {
+		System.out.println("젤다 게임을 시작한다");
+	}
+}
+
+---------------------------------------------------------------
+package 닌텐도게임;
+
+public class Mario extends GameChip{
+	
+	@Override
+	public void gameStart() {
+		System.out.println("마리오 게임을 시작한다");
+	}
+}
+---------------------------------------------------------------
+package 닌텐도게임;
+
+public class Pokemon extends GameChip{
+	
+	@Override
+	public void gameStart() {
+		System.out.println("포켓몬 게임을 시작한다");
+	}
+}
+---------------------------------------------------------------
+package 닌텐도게임;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// 게임 칩 3개(Pokemon, zelda, Mario)를 준비했고
+		// main 클래스 : 게임을 실행하는 공간 > 닌텐도 게임기
+		
+		// 업캐스팅 : 자식클래스가 부모클래스의 타입으로 변경
+		// Parent p = new Child();
+		// 포켓몬 게임칩 꺼내오기(객체 생성)
+		GameChip p = new Pokemon();
+		//게임칩 넣는 메서드 실행
+		insert(p);
+		// zelda
+		GameChip z = new Zelda();
+		insert(z);
+		// mario
+		GameChip m = new Mario();
+		insert(m);
+	}
+	
+	// 게임칩을 넣어서 작동시키는 메서드
+	private static void insert(GameChip g) {
+		g.gameStart();
+	}
+}
