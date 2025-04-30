@@ -1,0 +1,104 @@
+CREATE TABLE NLPMEMBER(
+    ID VARCHAR(50) PRIMARY KEY,
+    PW VARCHAR(100) NOT NULL,
+    NAME VARCHAR(50) NOT NULL,
+    AGE NUMBER,
+    SCORE NUMBER
+    );
+    
+    SELECT * FROM NLPMEMBER;
+    COMMIT;
+----------------------------------------------------
+package jdbc기초;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class Ex01Join {
+
+	public static void main(String[] args) {
+		// 사용자에게 입력받을 도구 가져오기
+		Scanner sc = new Scanner(System.in);
+		System.out.print("ID 입력 : ");
+		String id = sc.next();
+		System.out.print("PW 입력 : ");
+		String pw = sc.next();
+		System.out.print("이름 입력 : ");
+		String name = sc.next();
+		System.out.print("나이 입력 : ");
+		int age = sc.nextInt();
+		System.out.print("점수 입력 : ");
+		int score = sc.nextInt();
+		// 회원가입을 한 회원의 정보를 DB에 저장하는 실습
+		// JDBC(Java Database Connectivity)
+		// : JDBC 인터페이스 사용법
+
+		/* 예외 처리 구문 : try-catch문
+		 * 사용프로그램 실행 시, 발생할 수 있는 예기치 못한 상황 발생에 대비한 코드 */
+		Connection conn = null;
+		PreparedStatement psmt = null;
+		try { // try 구문 : 예외가 발생할 수도 있지만 일단은 시도해보는 구간
+			
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			// 2. 데이터 베이스 연결 (준비물 : 연결 경로, 계정 이름, 계정 비밀번호)
+			String url = "jdbc:oracle:JDBC드라이버 타입:ip주소:port번호:DB기본이름";
+
+			// 2) 계정 이름 (=사용자 이름)
+			String user = 계정이름;
+			
+			// 3) 계정 비밀번호
+			String password = 비밀번호호;
+			// 드라이버 연결
+			conn = DriverManager.getConnection(url, user, password);
+			
+			// 연결이 되었는지에 대한 결과 출력문
+			if(conn!=null) {
+				System.out.println("연결 성공!");
+			}else {
+				System.out.println("연결 실패...");
+			}
+			
+			// 3. Query 작성 > DB로 전송
+			String sql = "INSERT INTO NLPMEMBER VALUES(?,?,?,?,?)";
+			
+			// sql구문을 DB에 전송하는 작업
+			psmt = conn.prepareStatement(sql);
+			// 전송하기 전에 SQL문을 전송할 수 있는 형식으로 변경
+			psmt.setString(1, id);
+			psmt.setString(2, pw);
+			psmt.setString(3, name);
+			psmt.setInt(4, age);
+			psmt.setInt(5, score);
+			
+			// 4. sql구문 실행
+			// DML관련 쿼리문을 실행할 때
+			int row = psmt.executeUpdate();
+			// 5. 결과 처리
+			if(row>0) {
+				// row > "1"행이 추가되었습니다.
+				System.out.println("성공적으로 회원가입을 완료했습니다.");
+			}else {
+				System.out.println("회원가입에 실패했습니디.");
+			}
+			// 6. 자원 반납
+		} catch (Exception e) {
+			e.printStackTrace(); // 에러가 발생했을 때 어떤 오류인지 출력해준다
+		}finally {
+			try {
+				if(psmt!=null) {
+					psmt.close();
+				}
+				if(conn!=null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+}
