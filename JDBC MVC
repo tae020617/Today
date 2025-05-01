@@ -1,0 +1,272 @@
+package controller;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import model.MemberDTO;
+
+public class MemberDAO {
+	Scanner sc = new Scanner(System.in);
+	Connection conn = null;
+	PreparedStatement psmt = null;
+	ResultSet rs = null;
+
+	// 로그인 메서드
+	public String login(MemberDTO dto) {
+		String userName = null;
+		try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            String url = "jdbc:oracle:thin:IP주소:포트번호:xe";
+            String user = "계정이름";
+            String password = "비밀번호";
+            conn = DriverManager.getConnection(url, user, password);
+
+            String sql = "SELECT * FROM NLPMEMBER WHERE ID=? AND PW=?";
+            psmt = conn.prepareStatement(sql);
+            psmt.setString(1, dto.getId());
+            psmt.setString(2, dto.getPw());
+
+            rs = psmt.executeQuery();
+
+            if (rs.next() == true) {
+               userName = rs.getString("name");
+            }
+
+         } catch (Exception e) {
+            e.printStackTrace();
+         } finally {
+            try {
+               if (rs != null) {
+                  rs.close();
+               }
+               if (psmt != null) {
+                  psmt.close();
+               }
+               if (conn != null) {
+                  conn.close();
+               }
+            } catch (SQLException e) {
+               e.printStackTrace();
+            }
+         }
+		
+		return userName;
+	}
+	// 회원가입 메서드
+	public int join(MemberDTO dto) {
+		int row =0;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			String url = "jdbc:oracle:thin:IP주소:포트번호:xe";
+			String user = "계정이름";
+			String password = "비밀번호";
+			conn = DriverManager.getConnection(url, user, password);
+			
+			String sql = "INSERT INTO NLPMEMBER VALUES(?,?,?,?,?)";
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, dto.getId());
+			psmt.setString(2, dto.getPw());
+			psmt.setString(3, dto.getName());
+			psmt.setInt(4, dto.getAge());
+			psmt.setInt(5, dto.getScore());
+			row = psmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (psmt != null) {
+					psmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return row;
+		
+	}
+}
+----------------------------------------------------------
+package model;
+
+public class MemberDTO {
+	
+	// 1. 필드
+	private String id;
+	private String pw;
+	private String name;
+	private int age;
+	private int score;
+	
+	// 2. 메서드
+	// 생성자 : 모드 필드를 초기화 시키는 생성자
+	// getter/setter
+	
+	public MemberDTO(String id, String pw, String name, int age, int score) {
+		this.id = id;
+		this.pw = pw;
+		this.name = name;
+		this.age = age;
+		this.score = score;
+	}
+	
+	public MemberDTO(String id, String pw) {
+		this.id = id;
+		this.pw = pw;
+	}
+	
+	public MemberDTO(String id, String name, int age, int score) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+		this.score = score;
+	}
+
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPw() {
+		return pw;
+	}
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
+	}
+}
+-----------------------------------------------------
+package view;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import controller.MemberDAO;
+import model.MemberDTO;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		System.out.println("==== 회원 관리 프로그램 ====");
+		while (true) {
+			Connection conn = null;
+			PreparedStatement psmt = null;
+			ResultSet rs = null;
+	         
+			System.out.println("[1]회원가입 [2]로그인 [3]회원탈퇴 [4]전체회원 조회");
+			System.out.print(">> ");
+			int choice = sc.nextInt();
+
+			if (choice == 1) {
+				System.out.print("ID 입력 : ");
+				String id = sc.next();
+				System.out.print("PW 입력 : ");
+				String pw = sc.next();
+				System.out.print("이름 입력 : ");
+				String name = sc.next();
+				System.out.print("나이 입력 : ");
+				int age = sc.nextInt();
+				System.out.print("점수 입력 : ");
+				int score = sc.nextInt();
+			
+				MemberDAO dao = new MemberDAO();
+				MemberDTO dto = new MemberDTO(id, pw, name, age, score);
+				int row = dao.join(dto);
+
+				if (row > 0) {
+					System.out.println("성공적으로 회원가입을 완료했습니다.");
+				} else {
+					System.out.println("회원가입에 실패했습니디.");
+				}
+
+			} else if (choice == 2) {
+				// 로그인 기능
+				System.out.print("ID 입력 : ");
+				String id = sc.next();
+				System.out.print("PW 입력 : ");
+				String pw = sc.next();
+
+				MemberDAO dao = new MemberDAO();
+				MemberDTO dto = new MemberDTO(id, pw);
+				String userName = dao.login(dto);
+
+				if (userName != null) {
+					System.out.println(userName + "님 환영합니다:)");
+				} else {
+					System.out.println("로그인 실패");
+					System.out.println("아이디 또는 비밀번호를 다시 확인해주세요");
+				}
+
+			} else if (choice == 3) {
+				// 회원탈퇴 기능
+				System.out.print("ID 입력 : ");
+				String id = sc.next();
+				System.out.print("PW 입력 : ");
+				String pw = sc.next();
+
+				MemberDAO dao = new MemberDAO();
+				MemberDTO dto = new MemberDTO(id,pw);
+				int row = dao.delete(dto);
+
+				if (row > 0) {
+					System.out.println("회원 탈퇴에 성공했습니다.");
+				} else {
+					System.out.println("회원 탈퇴에 실패했습니다.");
+				}
+				
+			} else if (choice == 4) {
+				// 전체회원 조회 기능
+				String id = null;
+				String name = null;
+				int age = 0;
+				int score = 0;
+				
+				System.out.println("==== 전체 회원 조회 ====");
+				System.out.println("ID\t이름\t나이\t점수");
+
+				MemberDAO dao = new MemberDAO();
+				dao.selectAll();
+
+			} else {
+				// 종료합니다.
+				System.out.println("잘못 입력하셨습니다.");
+				System.out.println("종료합니다");
+				break;
+			}
+			System.out.println();
+		}
+	}
+
+}
