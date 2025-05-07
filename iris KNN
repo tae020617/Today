@@ -1,0 +1,57 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier # KNN model
+from sklearn.metrics import accuracy_score # 정확도 측정
+from sklearn.model_selection import train_test_split # 랜덤으로 train과 test를 분류
+from sklearn.datasets import load_iris # 붓꽃데이터를 sklean에서 제공받아 불러오기
+
+iris_data = load_iris()
+# 키값 확인
+print(iris_data.keys())
+# 라벨 확인
+print(iris_data.target)
+# 데이터 확인
+print(iris_data.data)
+# 라벨의 이름 확인
+print(iris_data.target_names)
+# 통계치 확인
+print(iris_data.DESCR)
+
+# 컬럼
+print(iris_data.feature_names)
+# 데이터(벨류)
+print(iris_data.data)
+
+iris_df = pd.DataFrame(iris_data.data, columns=iris_data.feature_names)
+iris_df.head()
+
+iris_df.info()
+
+x = iris_df
+y = iris_data.target
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, #사용할 데이터 넣어주기
+# test_size는 테스트 데이터르 얼마만큼 비중을 둘 것인지 정하는 값
+test_size = 0.25,
+# random_state는 랜덤으로 설정하는 값을 고정하는 것
+random_state=3)
+
+print(x_train.shape)
+print(y_train.shape)
+print(x_test.shape)
+print(y_test.shape)
+
+pd.plotting.scatter_matrix(x_train,
+                           figsize = (10,10), # 그래프의 크기
+                           c = y_train, # 클래스별 색상 설정
+                           alpha = 0.9 # 투명도 설정
+                          )
+plt.show()
+
+iris_knn_model = KNeighborsClassifier(n_neighbors=11)
+iris_knn_model.fit(x_train, y_train)
+
+# 모델 예측
+pre = iris_knn_model.predict(x_test)
+accuracy_score(y_test, pre)
