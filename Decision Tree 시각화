@@ -1,0 +1,55 @@
+!pip install graphviz
+
+# 라이브러리 불러오기
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+# 머신러닝 도구 불러오기
+# 데이터를 학습데이터와 테스트데이터로 나눠주는 도구
+from sklearn.model_selection import train_test_split
+# Dceision Tree모델(분류)을 불러오기
+from sklearn.tree import DecisionTreeClassifier
+
+data = pd.read_csv('./data/mushroom.csv')
+
+x = data.loc[:,'cap-shape':]
+y = data['poisonous']
+print(x.shape)
+print(y.shape)
+
+one_hot_x = pd.get_dummies(x)
+
+x_train, x_test, y_train, y_test = train_test_split(one_hot_x, y,
+                                                    test_size = 0.3,
+                                                   random_state=3)
+print(f'훈련데이터 : {x_train.shape}')
+print(f'훈련라벨 : {y_train.shape}')
+print(f'테스트데이터 : {x_test.shape}')
+print(f'테스트라벨 : {y_test.shape}')
+
+tree_model = DecisionTreeClassifier()
+
+tree_model.fit(x_train, y_train)
+
+pre = tree_model.predict(x_test)
+
+# 중요도를 수치화
+fi = tree_model.feature_importances_
+fi_df = pd.DataFrame(fi, index=x_train.columns, columns=['important'])
+fi_df.sort_values(by='important', ascending=False).head()
+
+from sklearn.tree import export_graphviz
+export_graphviz(tree_model1, out_file = './tree.dot',
+                class_names = ['독', '식용'],
+                feature_names = x_train.columns,
+                filled = True, # 노드의 클래스에 색상을 지정
+                impurity = False # 불순도를 따로 출력하지 않겠다
+               )
+
+import graphviz
+# tree.dot 파일을 만들었으니 불러와서 시각화 진행하기
+with open('tree.dot', encoding = 'UTF-8') as f:
+    # 파일을 읽어보자
+    dot_graph = f.read()
+# 형태 자체를 출력
+display(graphviz.Source(dot_graph))
