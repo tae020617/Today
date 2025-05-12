@@ -1,0 +1,54 @@
+# 특성 공학
+# 특성을 파악하여 합치거나 나누었을 때 유의미한 결과를 낼 수 있도록 변형하는 것
+train['Family'] = train['Parch'] + train['SibSp'] + 1
+test['Family'] = test['Parch'] + test['SibSp'] + 1
+
+# 카테고리화 (1 : Alone, 2~3 : small, 4이상일 경우 : Large)
+train['Family'] = pd.cut(train['Family'], bins=[0,1,4,11],
+                         labels=['Alone','Small','Large'])
+test['Family'] = pd.cut(test['Family'], bins=[0,1,4,11],
+                         labels=['Alone','Small','Large'])
+
+# 불필요한 컬럼들 제거
+train.drop(['Name','SibSp','Parch','Ticket'], axis = 1, inplace=True)
+test.drop(['Name','SibSp','Parch','Ticket'], axis = 1, inplace=True)
+print(train.info())
+print(test.info())
+
+# 문제와 답 분리
+x_train = train.loc[:,'Pclass':] # Survived를 제외한 Pclass부터 나머지 컬럼값을 가져오기
+y_train = train['Survived'] # 정답데이터인 Survived만 뽑아서 가져가기
+x_test = test
+
+print(x_train.shape)
+print(y_train.shape)
+print(x_test.shape)
+
+# one-hot 인코딩
+oh_train = pd.get_dummies(x_train)
+oh_test = pd.get_dummies(x_test)
+print(oh_train.shape)
+print(oh_test.shape)
+
+print(oh_train.shape)
+print(oh_test.shape)
+print(set(oh_train.columns) - set(oh_test.columns))
+
+oh_test['Deck_T'] = 0
+set(oh_train.columns) - set(oh_test.columns)
+
+# 모델 불러오기 (tree모델)
+from sklearn.tree import DecisionTreeClassifier
+# 모델 객체 생성
+tree_model = DecisionTreeClassifier() # 하이퍼파라미터 조정 안하기
+# 모델 학습
+tree_model.fit(oh_train, y_train)
+# 모델 예측
+pre = tree_model.predict(oh_test)
+pre
+
+result = pd.read_csv('./data/gender_submission.csv')
+result
+
+result['Survived'] = pre
+result.to_csv('./data/submission_tree.csv', index=False)
