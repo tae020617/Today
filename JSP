@@ -1,0 +1,44 @@
+******JSP구성요소*****
+1. 지시자 : java내에서 필요한 것을 기술 하기 위한 구성요소
+	- page 지시자 : 환경설정(예- import 등)
+	- include 지시자
+	- taglib 지시자
+2. 선언문 (declasration) : 전역변수 하는 구성요소 -- 생김새만 확인하기(별로 잘 안씀)
+3. 스크립트식 (scriptlet) : jsp내에서 사용할 수 있게 하는 구성요소
+4. 표현식 (Expression) : 선언한 변수, 메소드를 호출할 때 사용하는 구성요소
+
+주의사항 HTML 주석내에서 구성요소 작성하면 안됩니다! > 인식함 -->
+
+<!-- 스크립트식 -->
+<% int num = 10; %>
+<% if(num%2 == 0){// 스크립틀릿을 끊어도 상관 없다!! %>
+	<h1> 짝수입니다 </h1>
+<%}%>
+
+<!-- 표현식 -->
+<%= num %>
+
+<%= num %>
+<!-- 선언문 -->
+<%! int num2 = 10; %>
+
+<!-- include 지시자 : 한 페이지에 다른 페이지를 포함시킬 때 사용하는 구성요소-->
+<%@ include file = "ex05footer.jsp" %>
+
+---------------------------------------------------------------------------
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div>
+<p> 기관명 : 스마트인재개발원 </p>
+<p> 전화번호 : 062-355-3509 </p>
+<p> 주소 : 동구 중앙로 196 </p>
+</div>
+</body>
+</html>
