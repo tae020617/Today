@@ -1,0 +1,73 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('./data/digit_train.csv')
+data.head()
+
+data.info()
+
+# 데이터 시각화
+# 이미지 데이터로 확인해보기
+img0 = data.iloc[0,1:]
+img0.values
+
+# 흑백 데이터
+# 0~225
+# 0 : 검정
+# 255 흰색
+
+img0.shape
+
+# img데이터를 확인해보니 784개의 데이터가 존재하는 1차원형태의 배열로 이루어져 있다.
+# 내가 이미지를 확인하기 위해서는 28*28형태의 2차원 형태로 변환해줘야한다.
+img0_reshape = img0.values.reshape(28,28)
+img0_reshape.shape
+
+# 이미지 그려보기
+plt.imshow(img0_reshape, cmap='gray')
+plt.show()
+
+# 데이터 확인
+data.iloc[0,0]
+
+# 학습을 위한 데이터 분리
+x = data.iloc[:,1:] # 라벨만 제외한
+y = data.iloc[:,0]
+# 문제와 정답을 7:3으로 나눠주기
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x,
+                                                    y,
+                                                    test_size=0.3,
+                                                    random_state=5)
+print(x_train.shape)
+print(y_train.shape)
+print(x_test.shape)
+print(y_test.shape)
+
+# 3가지 모델 비교하기위해 모델 불러오기
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+
+# 모델 생성
+knn = KNeighborsClassifier()
+logi = LogisticRegression()
+svm = LinearSVC()
+
+# 모델 학습
+knn.fit(x_train, y_train)
+logi.fit(x_train, y_train)
+svm.fit(x_train, y_train)
+
+# 모델 평가
+print('KNN 모델 : ', knn.score(x_train, y_train))
+print('Logistic 모델 : ', logi.score(x_train, y_train))
+print('SVM 모델: ', svm.score(x_train, y_train))
+
+# logi가 테스트 데이터로 예측한 값들
+pre = logi.predict(x_test)
+
+# 분류 평가지표를 확인하기
+from sklearn.metrics import classification_report
+print(classification_report(y_test, pre))
