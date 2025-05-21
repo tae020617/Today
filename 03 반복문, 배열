@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 1.while문
+        // 조건식을 통해서 코드를 끝내느 while문을 작성 > 원하는 출력문을 10번 출력
+        let num=1;
+        while(num<=10){
+            console.log(`num = ${num}`);
+            num+=1;
+        }
+
+        let num1 = 1;
+
+        while(true){
+            console.log(num1);
+            num1++;
+
+            if(num1 === 11){
+                console.log('프로그램을 종요합니다.')
+                break;
+            }
+        }
+
+        let sum =0;
+        while(true){
+            let n = parseInt(prompt('숫자를 입력해주세요'));
+
+            if(n === 0){
+                console.log(`최종  결과 = ${sum}`);
+                console.log('프로그램을 종료합니다.');
+                break;
+            }else{
+                sum+=n;
+                console.log(`더한  결과 = ${sum}`);
+            }
+        }
+
+        
+
+
+
+    </script>
+</body>
+</html>
+
+----------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // do-while문
+        let num = 1;
+
+        do{
+            console.log(num);
+            num++;
+        }while(num<=10)
+
+        // do-while문 실습
+        //입력한 숫자의 배수 구하기 (100까지)
+        let i=1;
+        let n = parseInt(prompt('숫자를 입력하세요'));
+        do{
+            console.log(n*i);
+            i++;
+        }while(n*i<100)
+
+        // 방법2
+        i=1;
+        n = parseInt(prompt('숫자를 입력하세요'));
+        do{
+            if(i%n === 0){
+                console.log(i);
+            }
+            i++;
+        }while(i<=100)
+
+    </script>
+</body>
+</html>
+
+----------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // for문 > let i = 1; i<5; i++/i--
+        // for(초기화; 조건식; 작업 후 처리){
+        // 실행문장
+        // }
+
+        // 100~1까지 출력하는 for문 작성
+        for(let i = 100; i>0; i--){
+            console.log(i)
+        }
+
+        // for문 실습
+        // 1~20까지의 숫자 중 홀/짝의 합과 숫자들을 각각 출력
+        let evenSum = 0;
+        let oddSum = 0;
+        let even ='';
+        let odd = '';
+
+        for(let i = 1; i<=20; i++){
+            if(i%2===0){
+                even += (i+' ');
+                evenSum += i;
+            }else{
+                odd += (i+' ');
+                oddSum += i;
+            }
+        }
+
+        console.log(`${even}의 합: ${evenSum}`);
+        console.log(`${odd}의 합: ${oddSum}`);
+
+    </script>
+</body>
+</html>
+
+----------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 배열(array)
+        // 1. 빈 배열 생성 > []
+        let array = [];
+
+        // 2. 인덱스를 활용
+        array[0] = 1;
+        array[1] = 2;
+
+        // 3. push() 활용
+        // 마지막 위치에 데이터를 추가하는 기능
+        array.push(3);
+        array.push(4);
+
+        console.log(array);
+
+        // for문을 활용해서 array내 모든 데이터를 출력
+        for(let i=0; i<array.length; i++){
+            console.log(array[i]);
+        }
+
+        // 배열 내 요소 중 3을 7로 수정
+        array[2] = 7;
+        console.log(array);
+
+        // 배열 내 데이터 삭제하는 방법
+        // pop() > 마지막 위치에 있는 데이터가 삭제
+        array.pop();
+        console.log(array);
+
+        // splice(인덱스, 삭제할 개수)
+        // 인덱스 : 삭제할 데이터의 위치
+        // 삭제할 개수 : 해당 인덱스 위치로부터 삭제할 개수 (뒤로)
+        array.splice(0, 1);
+        console.log(array);
+
+        let array2 = [10,20,30,40,50];
+        console.log(array2);
+
+    </script>
+</body>
+</html>
+
+-------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 자주 사용하는 배열 함수
+        // 배열변수.include(찾고 싶은 요소) // 불리언 타입
+
+        let array = [1,2,3,4,5];
+
+        // 배열 내 3이라는 요소가 있는지 확인
+        console.log(array.includes(3));
+
+        // 배열 내 9라는 요소가 있는지 확인
+        console.log(array.includes(9));
+
+        // 배열변수.indexOf(인덱스 위치를 알고 싶은 요소)
+        console.log(array.indexOf(2));
+
+        // 배열 내 10이라는 데이터 요소의 인덱스 위치 확인
+        console.log(array.indexOf(10)); // 인덱스 위치가 확인안되면 -1
+
+        // 배열변수.slice(시작 인덱스, 끝 인덱스)
+        // 끝 인덱스 -1 범위까디 출력
+        console.log(array.slice(1, 4));
+
+        
+
+    </script>
+</body>
+</html>
